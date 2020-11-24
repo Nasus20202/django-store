@@ -12,30 +12,30 @@
 <body>
  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <a class="navbar-brand" href="{% url 'products:index' %}">Sklep</a>
-  {% if category_list %}
+  {% if category.category_list %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
-             {% for category in category_list %}
+             {% for cat in category.category_list %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                      {{ category.name}}
+                      {{ cat.name}}
                   </a>
                   <div class="dropdown-menu">
-                     {% for subcategory in category.subcategory_list %}
+                     {% for subcat in cat.subcategory_list %}
                          {% if forloop.first %}
-                             <a class="dropdown-item" href="{% url 'products:category' category.shortName %}"><b>Wszystkie</b></a><hr class="bg-secondary">
+                             <a class="dropdown-item" href="{% url 'products:category' cat.shortName %}"><b>Wszystkie</b></a><hr class="bg-secondary">
                          {% endif %}
-                        <a class="dropdown-item" href="{% url 'products:subcategory' category.shortName subcategory.shortName %}">{{ subcategory.name}}</a>
+                        <a class="dropdown-item" href="{% url 'products:subcategory' cat.shortName subcat.shortName %}">{{ subcat.name}}</a>
                      {% endfor %}
                   </div>
                 </li>
              {% endfor %}
           </ul>
       </div>
-  {% endif %}
+    {% endif %}
 </nav>
 
 <div class="jumbotron text-center">
@@ -45,8 +45,8 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-        {% if subcategory_list %}
-            {% for subcategory in subcategory_list %}
+        {% if category.subcategory_list %}
+            {% for subcategory in category.subcategory_list %}
                 {{ subcategory.name }}<br>
             {% endfor %}
         {% else %}

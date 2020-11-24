@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <title>{{ subcategory.name }} < {{ category.name }}</title>
+  <title>{{ product.name }}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -10,15 +10,15 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
- <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <a class="navbar-brand" href="{% url 'products:index' %}">Sklep</a>
-  {% if category.category_list %}
+  {% if product.Category.category_list %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
-             {% for cat in category.category_list %}
+             {% for cat in product.Category.category_list %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                       {{ cat.name}}
@@ -39,20 +39,12 @@
 </nav>
 
 <div class="jumbotron text-center">
-  <h1>{{ subcategory.name }}</h1>
+  <h1>{{ product.name }}</h1>
 </div>
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-12">
-        {% if subcategory.product_list %}
-            {% for product in subcategory.product_list %}
-                {{ product.name }}<br>
-            {% endfor %}
-        {% else %}
-            Brak produktów
-        {% endif %}
-    </div>
+
   </div>
 </div>
 
