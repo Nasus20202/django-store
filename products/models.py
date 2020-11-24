@@ -60,3 +60,6 @@ class Product(models.Model):
 
     def Category(self):
         return self.Subcategory().category
+
+    def Price_divided(self):
+        return self.price/100

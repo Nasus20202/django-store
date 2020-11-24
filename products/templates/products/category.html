@@ -47,7 +47,7 @@
     <div class="col-sm-12">
         {% if category.subcategory_list %}
             {% for subcategory in category.subcategory_list %}
-                {{ subcategory.name }}<br>
+                <a href="{% url 'products:subcategory' category.shortName subcategory.shortName %}">{{ subcategory.name }}</a><br>
             {% endfor %}
         {% else %}
             Brak podkategorii
