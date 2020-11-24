@@ -48,7 +48,7 @@
     <div class="col-sm-12">
         {% if category_list %}
             {% for cat in category_list %}
-                <a href="{% url 'products:category' category.shortName %}">{{ category.name }}</a><br>
+                <a href="{% url 'products:category' cat.shortName %}">{{ cat.name }}</a><br>
             {% endfor %}
         {% else %}
             Brak kategorii
