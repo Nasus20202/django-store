@@ -8,6 +8,13 @@ class Category(models.Model):
     def subcategory_list(self, order='name'):
         return self.subcategory_set.all().order_by(order)
 
+    def product_list(self, order='name'):
+        product_list = []
+        for subcategory in self.subcategory_list(order):
+            for product in subcategory.product_list(order):
+                product_list.append(product)
+        return product_list
+
     name = models.CharField(max_length=256, default='')
     shortName = models.CharField(max_length=32, default='')
 
@@ -30,6 +37,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=256, default='')
     shortName = models.CharField(max_length=32, default='')
+    price = models.IntegerField(default=0)
     stock = models.IntegerField(default=0)
     times_bought = models.IntegerField(default=0)
     recentViews = models.IntegerField(default=0)
