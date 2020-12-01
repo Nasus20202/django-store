@@ -63,7 +63,7 @@
                     <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
                     <div class="card-body">
                         <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}">{{ product.brand }} {{ product.name }}</a></h5>
-                        <p class="card-text">{{ product.about|slice:"75" }}...</p>
+                        <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
                         <p style="float: right">{{ product.Price_divided }} zł</p>
                         <a href="#" class="btn btn-primary" id="{{ product.shortName }}-btn">Dodaj do koszyka</a>
                     </div>
