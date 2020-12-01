@@ -51,8 +51,9 @@ class Product(models.Model):
     recentViews = models.IntegerField(default=0)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     brand = models.CharField(max_length=128, default='')
-    tags = models.CharField(max_length=1024, default='')
-    about = models.CharField(max_length=4096, default='')
+    tags = models.TextField(max_length=1024, default='')
+    about = models.TextField(max_length=10240, default='')
+    shortAbout = models.TextField(max_length=512, default='')
     photo = models.CharField(max_length=256, default='')
 
     def Subcategory(self):
@@ -63,3 +64,6 @@ class Product(models.Model):
 
     def Price_divided(self):
         return self.price/100
+
+
+

@@ -45,6 +45,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
+        Podkategorie w {{ category.name }}:<br>
         {% if category.subcategory_list %}
             {% for subcategory in category.subcategory_list %}
                 <a href="{% url 'products:subcategory' category.shortName subcategory.shortName %}">{{ subcategory.name }}</a><br>

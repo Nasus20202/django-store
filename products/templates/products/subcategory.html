@@ -8,6 +8,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .row {
+   display: flex;
+   flex-wrap: wrap;
+}
+
+.row > div[class*='col-'] {
+  display: flex;
+}
+
+    </style>
+  {% load static %}
 </head>
 <body>
  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -43,11 +55,21 @@
 </div>
 
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12">
         {% if subcategory.product_list %}
+            <div class="row">
             {% for product in subcategory.product_list %}
-                <a href="{% url 'products:product' product.shortName %}">{{ product.name }}</a><br>
+                <div class="col-md-4">
+                <div class="card">
+                    <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}">{{ product.brand }} {{ product.name }}</a></h5>
+                        <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
+                        <p style="float: right">{{ product.Price_divided }} zł</p>
+                        <a href="#" class="btn btn-primary" id="{{ product.shortName }}-btn">Dodaj do koszyka</a>
+                    </div>
+                </div>
+                </div>
+                {%  cycle '' '' '</div><div class="row">' %}
             {% endfor %}
         {% else %}
             Brak produktów

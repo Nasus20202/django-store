@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <title>{{ product.name }}</title>
+  <title>{{ product.brand }} {{ product.name }}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  {% load static %}
 </head>
 <body>
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -39,15 +40,63 @@
 </nav>
 
 <div class="jumbotron text-center">
-  <h1>{{ product.name }}</h1>
+  <h1>{{ product.brand }} {{ product.name }}</h1>
+ <ul class="nav justify-content-center">
+  <li class="nav-item">
+    <a class="nav-link" href="#about">O produkcie</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#specs">Specyfikacja</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Opinie</a>
+  </li>
+</ul>
+</div>
 </div>
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-12">
-        Cena: {{ product.Price_divided }}<br>
-        Dostępne {{ product.stock }} sztuk<br>
+    <div class="col-sm-5">
+        <img class="img-fluid" src="{%  static "products/img" %}/{{ product.photo }}" alt="{{ product.shortName }}">
     </div>
+    <div class="col-sm-7">
+        <table class="table" style="font-size: 150%" id="main">
+            <tbody>
+                <tr>
+                    <th scope="col" style="font-weight: normal">Cena:</th>
+                    <th scope="col" >{{ product.Price_divided }} zł</th>
+                </tr>
+                <tr>
+                    <th scope="col"  style="font-weight: normal">Dostępność:</th>
+                    {% if product.stock > 0 %}
+                    <th scope="col">{{ product.stock }} szt.</th>
+                    {% else %}
+                        <th scope="col" class="text-danger">Produkt niedostępny</th>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th scope="col"  style="font-weight: normal">Producent:</th>
+                    <th scope="col">{{ product.brand }}</th>
+                </tr>
+            </tbody>
+        </table>
+        {% if product.stock > 0 %}
+            <a href="#" class="btn-block btn btn-primary">Dodaj do koszyka</a>
+        {%  else %}
+            <a href="#" class="btn-block btn btn-primary bg-danger  disabled">Niedostępny</a>
+        {% endif %}
+    </div>
+    <div class="row" id="about">
+        <div class="col-sm-12">
+            {% autoescape off %}
+            {{ product.about }}
+            {% endautoescape %}
+        </div>
+    </div>
+    <table class="table" id="specs">
+
+    </table>
   </div>
 </div>
 

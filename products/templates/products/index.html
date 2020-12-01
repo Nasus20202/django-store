@@ -46,6 +46,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
+        Kategorie produktów w sklepie:<br>
         {% if category_list %}
             {% for cat in category_list %}
                 <a href="{% url 'products:category' cat.shortName %}">{{ cat.name }}</a><br>
