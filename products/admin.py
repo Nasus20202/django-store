@@ -7,7 +7,7 @@ class SubcategoryInline(admin.TabularInline):
     extra = 1
 
 
-class ProductInline(admin.TabularInline):
+class ProductInline(admin.StackedInline):
     model = Product
     extra = 1
 

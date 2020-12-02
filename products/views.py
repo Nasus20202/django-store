@@ -18,7 +18,11 @@ def category_view(request, category_name):
 def subcategory_view(request, category_name, subcategory_name):
     category = get_object_or_404(Category, shortName__iexact=category_name)
     subcategory = get_object_or_404(Subcategory, shortName__iexact=subcategory_name)
-    context = {'category': category, 'subcategory': subcategory, }
+    try:
+        sort = request.GET['sort']
+    except:
+        sort = 'name'
+    context = {'category': category, 'subcategory': subcategory, 'sort': sort}
     return render(request, 'products/subcategory.html', context)
 
 
@@ -26,5 +30,3 @@ def product_view(request, product_name):
     product = get_object_or_404(Product, shortName__iexact=product_name)
     context = {'product': product, }
     return render(request, 'products/product.html', context)
-
-

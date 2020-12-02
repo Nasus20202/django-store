@@ -52,12 +52,28 @@
 
 <div class="jumbotron text-center">
   <h1>{{ subcategory.name }}</h1>
+    <div class="row">
+        <div class="col-sm-10"></div>
+            <div class="col-sm-2">
+                <select class="form-control" id="sort" onchange="location = this.value">
+                    <option value="">Sortuj</option>
+                    <option value="?sort=-name">Od A od Z</option>
+                    <option value="?sort=name">Od Z do A</option>
+                    <option value="?sort=price">Cena: rosnąco</option>
+                    <option value="?sort=-price">Cena: malejąco</option>
+                </select>
+            </div>
+        </div>
+  </div>
 </div>
+
 
 <div class="container">
         {% if subcategory.product_list %}
             <div class="row">
-            {% for product in subcategory.product_list %}
+            {% load products_extras %}
+            {% products subcategory sort as products_tag %}
+            {% for product in products_tag %}
                 <div class="col-md-4">
                 <div class="card">
                     <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
@@ -65,7 +81,7 @@
                         <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}">{{ product.brand }} {{ product.name }}</a></h5>
                         <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
                         <p style="float: right">{{ product.Price_divided }} zł</p>
-                        <a href="#" class="btn btn-primary" id="{{ product.shortName }}-btn">Dodaj do koszyka</a>
+                        <a href="#" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
                     </div>
                 </div>
                 </div>
