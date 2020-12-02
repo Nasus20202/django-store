@@ -23,6 +23,12 @@
 }
 
   </style>
+    <script type="text/javascript">
+      function s(){
+          search = document.getElementById("searchText").value;
+          location.href = {% url 'products:search' %}+'?value='+search;
+      }
+    </script>
   {% load static %}
 </head>
 <body>
@@ -60,6 +66,16 @@
   {% else %}
     <h1>Szukaj</h1>
   {% endif %}
+<br>
+<div class="row form-group">
+            <div class="col-md-11">
+                <input type="text" class="form-control" id="searchText" size="128" placeholder="Wyszukaj w sklepie...">
+            </div>
+
+                <div class="col-md-1">
+                <a onclick="s()" href="#" style="margin-left: 10px" class="btn btn-primary">Szukaj</a>
+                </div>
+            </div><br>
 </div>
 
 <div class="container">
