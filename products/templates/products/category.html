@@ -8,6 +8,18 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+        .row {
+   display: flex;
+   flex-wrap: wrap;
+   }
+
+.row > div[class*='col-'] {
+  display: flex;
+}
+
+  </style>
+  {% load static %}
 </head>
 <body>
  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
@@ -40,18 +52,44 @@
 
 <div class="jumbotron text-center">
   <h1>{{ category.name }}</h1>
+    <div class="row">
+        <div class="col-sm-10"></div>
+            <div class="col-sm-2">
+                <select class="form-control" id="sort" onchange="location = this.value">
+                    <option value="">Sortuj</option>
+                    <option value="?sort=times_bought">Popularność</option>
+                    <option value="?sort=-name">Od A od Z</option>
+                    <option value="?sort=name">Od Z do A</option>
+                    <option value="?sort=price">Cena: rosnąco</option>
+                    <option value="?sort=-price">Cena: malejąco</option>
+                </select>
+            </div>
+        </div>
+  </div>
 </div>
 
+
 <div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-        Podkategorie w {{ category.name }}:<br>
-        {% if category.subcategory_list %}
-            {% for subcategory in category.subcategory_list %}
-                <a href="{% url 'products:subcategory' category.shortName subcategory.shortName %}">{{ subcategory.name }}</a><br>
+        {% if category.product_list %}
+            <div class="row">
+            {% load products_extras %}
+            {% products category sort as products_tag %}
+            {% for product in products_tag %}
+                <div class="col-md-4">
+                <div class="card">
+                    <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}"><span class="text-muted">{{ product.brand }}</span> {{ product.name }}</a></h5>
+                        <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
+                        <p style="float: right">{{ product.Price_divided }} zł</p>
+                        <a href="#" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
+                    </div>
+                </div>
+                </div>
+                {%  cycle '' '' '</div><div class="row">' %}
             {% endfor %}
         {% else %}
-            Brak podkategorii
+            Brak produktów
         {% endif %}
     </div>
   </div>

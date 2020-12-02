@@ -11,14 +11,26 @@ def index_view(request):
 
 def category_view(request, category_name):
     category = get_object_or_404(Category, shortName__iexact=category_name)
-    context = {'category': category, }
+    try:
+        sort = request.GET['sort']
+        if sort not in {'name', '-name', 'price', '-price', '-times_bought'}:
+            sort = '-times_bought'
+    except:
+        sort = '-times_bought'
+    context = {'category': category, 'sort': sort}
     return render(request, 'products/category.html', context)
 
 
 def subcategory_view(request, category_name, subcategory_name):
     category = get_object_or_404(Category, shortName__iexact=category_name)
     subcategory = get_object_or_404(Subcategory, shortName__iexact=subcategory_name)
-    context = {'category': category, 'subcategory': subcategory, }
+    try:
+        sort = request.GET['sort']
+        if sort not in {'name', '-name', 'price', '-price', '-times_bought'}:
+            sort = '-times_bought'
+    except:
+        sort = '-times_bought'
+    context = {'category': category, 'subcategory': subcategory, 'sort': sort}
     return render(request, 'products/subcategory.html', context)
 
 
@@ -26,5 +38,3 @@ def product_view(request, product_name):
     product = get_object_or_404(Product, shortName__iexact=product_name)
     context = {'product': product, }
     return render(request, 'products/product.html', context)
-
-
