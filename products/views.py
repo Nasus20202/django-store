@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views import generic
+from django.db.models import Q
 from .models import *
 
 
@@ -38,3 +38,17 @@ def product_view(request, product_name):
     product = get_object_or_404(Product, shortName__iexact=product_name)
     context = {'product': product, }
     return render(request, 'products/product.html', context)
+
+
+def search(request):
+    category_list = Category.objects.all().order_by('name')
+    try:
+        value = request.GET['value']
+        found = Product.objects.filter(Q(name__contains=value) | Q(brand__contains=value))
+
+    except:
+        value = 'Undefined'
+        found = []
+
+    context = {'category_list': category_list, 'value': value, 'found': found}
+    return render(request, 'products/search.html', context)

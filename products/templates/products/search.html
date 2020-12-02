@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <title>{% if value != 'Undefined' %}
+    Szukaj {{ value }}
+  {% else %}
+    Szukaj
+  {% endif %}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+        .row {
+   display: flex;
+   flex-wrap: wrap;
+   }
+
+.row > div[class*='col-'] {
+  display: flex;
+}
+
+  </style>
+  {% load static %}
+</head>
+<body>
+ <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <a class="navbar-brand" href="{% url 'products:index' %}">Sklep</a>
+  {% if category_list %}
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+             {% for cat in category_list %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                      {{ cat.name}}
+                  </a>
+                  <div class="dropdown-menu">
+                     {% for subcat in cat.subcategory_list %}
+                         {% if forloop.first %}
+                             <a class="dropdown-item" href="{% url 'products:category' cat.shortName %}"><b>Wszystkie</b></a><hr class="bg-secondary">
+                         {% endif %}
+                        <a class="dropdown-item" href="{% url 'products:subcategory' cat.shortName subcat.shortName %}">{{ subcat.name}}</a>
+                     {% endfor %}
+                  </div>
+                </li>
+             {% endfor %}
+          </ul>
+      </div>
+    {% endif %}
+</nav>
+
+<div class="jumbotron text-center">
+  {% if value != 'Undefined' %}
+    <h1>Szukaj {{ value }}</h1>
+  {% else %}
+    <h1>Szukaj</h1>
+  {% endif %}
+</div>
+
+<div class="container">
+            {% if found.count > 0 %}
+                <div class="row">
+                {% for prod in found %}
+                    <div class="col-md-4">
+                    <div class="card">
+                    <a href="{% url 'products:product' prod.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ prod.photo }}" alt="{{ prod.shortName }}"></a>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'products:product' prod.shortName %}"><span class="text-muted">{{ prod.brand }}</span> {{ prod.name }}</a></h5>
+                        <p class="card-text">{{ prod.shortAbout|slice:"100" }}...</p>
+                        <p style="float: right">{{ prod.Price_divided }} zł</p>
+                        <a href="#" class="btn btn-primary" id="{{ prod.shortName }}-add-to-cart">Dodaj do koszyka</a>
+                    </div>
+                </div>
+                </div>
+                {%  cycle '' '' '</div><div class="row">' %}
+                {% endfor %}
+            {% else %}
+                Nie znaleziono produktów
+            {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

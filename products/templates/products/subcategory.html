@@ -19,6 +19,12 @@
 }
 
     </style>
+    <script type="text/javascript">
+      function s(){
+          search = document.getElementById("searchText").value;
+          location.href = {% url 'products:search' %}+'?value='+search;
+      }
+    </script>
   {% load static %}
 </head>
 <body>
@@ -51,10 +57,13 @@
 </nav>
 
 <div class="jumbotron text-center">
-  <h1>{{ subcategory.name }}</h1>
-    <div class="row">
-        <div class="col-sm-10"></div>
-            <div class="col-sm-2">
+  <h1>{{ subcategory.name }}</h1><br>
+    <div class="row form-group">
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="searchText" size="128" placeholder="Wyszukaj w sklepie...">
+                <a onclick="s()" href="#" style="margin-left: 10px" class="btn btn-primary">Szukaj</a>
+            </div>
+            <div class="col-md-3">
                 <select class="form-control" id="sort" onchange="location = this.value">
                     <option value="">Sortuj</option>
                     <option value="?sort=times_bought">Popularność</option>
@@ -63,11 +72,9 @@
                     <option value="?sort=price">Cena: rosnąco</option>
                     <option value="?sort=-price">Cena: malejąco</option>
                 </select>
-            </div>
         </div>
   </div>
 </div>
-
 
 <div class="container">
         {% if subcategory.product_list %}
