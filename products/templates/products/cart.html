@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <title>{{ subcategory.name }} < {{ category.name }}</title>
+  <title>Koszyk</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -18,6 +18,16 @@
   display: flex;
 }
 
+    @media only screen and (max-width: 750px) {
+        .table-img {
+            width: 67%;
+    }}
+    @media only screen and (min-width: 751px) {
+        .table-img {
+            width: 33%;
+        }
+    }
+
     </style>
     <script type="text/javascript">
       function s(){
@@ -30,13 +40,13 @@
 <body>
  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <a class="navbar-brand" href="{% url 'products:index' %}">Sklep</a>
-  {% if category.category_list %}
+  {% if category_list %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
           <ul class="navbar-nav">
-             {% for cat in category.category_list %}
+             {% for cat in category_list %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                       {{ cat.name}}
@@ -54,60 +64,52 @@
           </ul>
       </div>
     {% endif %}
+         <ul class="nav navbar-nav ml-auto">
+            <a class="nav-link" style="float: right; font-weight: bold" href="{% url 'products:cart' %}">Koszyk</a>
+          </ul>
 </nav>
 
 <div class="jumbotron text-center">
-  <h1>{{ subcategory.name }}</h1><br>
+  <h1>Koszyk</h1><br>
     <div class="row form-group">
-            <div class="col-md-9">
+            <div class="col-md-12">
                 <input type="text" class="form-control" id="searchText" size="128" placeholder="Wyszukaj w sklepie...">
                 <a onclick="s()" href="#" style="margin-left: 10px" class="btn btn-primary">Szukaj</a>
             </div>
-            <div class="col-md-3">
-                <select class="form-control" id="sort" onchange="location = this.value">
-                    <option value="">Sortuj</option>
-                    <option value="?sort=times_bought">Popularność</option>
-                    <option value="?sort=-name">Od A od Z</option>
-                    <option value="?sort=name">Od Z do A</option>
-                    <option value="?sort=price">Cena: rosnąco</option>
-                    <option value="?sort=-price">Cena: malejąco</option>
-                </select>
-        </div>
+
   </div>
 </div>
 
 <div class="container">
-        {% if subcategory.product_list %}
-            <div class="row">
+    {% if cart %}
+    <table class="table table-image">
+    <thead><tr>
+            <th scope="col"></th>
+        <th scope="col">Producent</th>
+          <th scope="col">Produkt</th>
+          <th scope="col">Ilość</th>
+          <th scope="col">Usuń</th>
+      </tr></thead><tbody>
+        {% for shortName in cart %}
             {% load products_extras %}
-            {% products subcategory sort as products_tag %}
-            {% for product in products_tag %}
-                <div class="col-md-4">
-                <div class="card">
-                    <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}"><span class="text-muted">{{ product.brand }}</span> {{ product.name }}</a></h5>
-                        <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
-                        <p style="float: right">{{ product.Price_divided }} zł</p>
-                        {% if product.stock > 0 %}
-                            <a href="{% url 'products:add_to_cart' product.shortName %}" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
-                        {%  else %}
-                            <a href="#" class="btn text-white bg-danger  disabled">Niedostępny</a>
-                        {% endif %}
-                    </div>
-                </div>
-                </div>
-                {%  cycle '' '' '</div><div class="row">' %}
-            {% endfor %}
-        {% else %}
-            Brak produktów
-        {% endif %}
-        <ul class="nav navbar-nav ml-auto">
-            <a class="nav-link" style="float: right; font-weight: bold" href="{% url 'products:cart' %}">Koszyk</a>
-          </ul>
-    </div>
-  </div>
+            {% product_by_shortName shortName as prod %}
+            <tr scope="row">
+                <td style="width: 20%"><a href="{% url 'products:product' prod.shortName %}"><img class="img-fluid table-img" src="{% static "/products/img/" %}{{ prod.photo }}"></a></td>
+                <td style="text-align: left"><a style="color: black" href="{% url 'products:product' prod.shortName %}">{{ prod.brand }}</a></td>
+                <td style="text-align: left"><a style="color: black" href="{% url 'products:product' prod.shortName %}">{{ prod.name }}</a></td>
+                <td>
+                    <a href="{% url 'products:change_cart' prod.shortName '-1' %}">&#10134;</a>
+                    <b>{{ cart|item:shortName }}</b>
+                    <a href="{% url 'products:change_cart' prod.shortName '1' %}">&#10133;</a>
+                </td>
+                <td><a href="{% url 'products:remove_from_cart' prod.shortName %}">&#128465;</a></td>
+            </tr>
+        {% endfor %}
+    </tbody></table>
+    {% else %}
+        Koszyk jest pusty
+    {% endif %}
+    <br><br><a class="btn btn-primary" style="float: right" href="{% url 'products:clear_cart' %}">Wyczyść koszyk</a>
 </div>
-
 </body>
 </html>
