@@ -21,3 +21,33 @@ def item(value, arg):
         return value[arg]
     except:
         return None
+
+
+@register.simple_tag
+def multiply(a, b):
+    result = a*b
+    result = str(result)
+    result2 = ''
+    for i in result:
+        if i == '.':
+            result2 += ','
+        else:
+            result2 += i
+    return result2
+
+
+@register.simple_tag
+def price_sum(cart):
+    sum = 0
+    for name in cart:
+        product = Product.objects.get(shortName__iexact=name)
+        sum += product.price*cart[product.shortName]
+    sum = sum/100
+    sum = str(sum)
+    result = ''
+    for i in sum:
+        if i == '.':
+            result += ','
+        else:
+            result += i
+    return result

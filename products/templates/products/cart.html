@@ -88,6 +88,7 @@
         <th scope="col">Producent</th>
           <th scope="col">Produkt</th>
           <th scope="col">Ilość</th>
+          <th scope="col">Cena</th>
           <th scope="col">Usuń</th>
       </tr></thead><tbody>
         {% for shortName in cart %}
@@ -97,19 +98,37 @@
                 <td style="width: 20%"><a href="{% url 'products:product' prod.shortName %}"><img class="img-fluid table-img" src="{% static "/products/img/" %}{{ prod.photo }}"></a></td>
                 <td style="text-align: left"><a style="color: black" href="{% url 'products:product' prod.shortName %}">{{ prod.brand }}</a></td>
                 <td style="text-align: left"><a style="color: black" href="{% url 'products:product' prod.shortName %}">{{ prod.name }}</a></td>
+                {% with cart|item:shortName as count %}
                 <td>
                     <a href="{% url 'products:change_cart' prod.shortName '-1' %}">&#10134;</a>
-                    <b>{{ cart|item:shortName }}</b>
+                    <b>{{ count }}</b>
                     <a href="{% url 'products:change_cart' prod.shortName '1' %}">&#10133;</a>
                 </td>
+                <td>{% multiply prod.Price_divided count %} zł</td>
+                {% endwith %}
                 <td><a href="{% url 'products:remove_from_cart' prod.shortName %}">&#128465;</a></td>
             </tr>
         {% endfor %}
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Łącznie:</td>
+        <td>{% price_sum cart %} zł</td>
+        <td></td>
     </tbody></table>
+
+    <br><br>
+    <div class="row">
+        <div class="col-sm-9">
+            <a class="btn btn-block btn-success" href="#">Zamów</a>
+        </div>
+        <div class="col-sm-3">
+            <a class="btn btn-block btn-primary" style="float: right" href="{% url 'products:clear_cart' %}">Wyczyść koszyk</a>
+        </div>
+    </div>
     {% else %}
-        Koszyk jest pusty
+        <br><br><h3 style="text-align: center" class="text-info">Koszyk jest pusty</h3>
     {% endif %}
-    <br><br><a class="btn btn-primary" style="float: right" href="{% url 'products:clear_cart' %}">Wyczyść koszyk</a>
 </div>
 </body>
 </html>
