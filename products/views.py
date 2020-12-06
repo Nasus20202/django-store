@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import *
 
 
@@ -52,3 +54,61 @@ def search(request):
 
     context = {'category_list': category_list, 'value': value, 'found': found}
     return render(request, 'products/search.html', context)
+
+
+def add_to_cart(request, product_name):
+    product = get_object_or_404(Product, shortName__iexact=product_name)
+    cart = request.session.get('cart', {})
+    if cart.__contains__(product_name):
+        cart[product_name] += 1
+    else:
+        cart[product_name] = 1
+    request.session['cart'] = cart
+    return HttpResponseRedirect(reverse('products:cart'))
+
+
+def cart(request):
+    cartData = request.session.get('cart', {})
+    category_list = Category.objects.all().order_by('name')
+    cart = {}
+    for i in cartData:
+        if cart.__contains__(i):
+            cart[i] += cartData[i]
+        else:
+            cart[i] = cartData[i]
+    context = {'category_list': category_list, 'cart': cart}
+    return render(request, 'products/cart.html', context)
+
+
+def clear(request):
+    request.session['cart'] = {}
+    return HttpResponseRedirect(reverse('products:index'))
+
+
+def remove(request, product_name):
+    cartData = request.session.get('cart', {})
+    cart = {}
+    for i in cartData:
+        if cart.__contains__(i):
+            cart[i] += cartData[i]
+        else:
+            cart[i] = cartData[i]
+    cart.pop(product_name)
+    request.session['cart'] = cart
+    return HttpResponseRedirect(reverse('products:cart'))
+
+
+def change(request, product_name, value):
+    value = int(value)
+    cartData = request.session.get('cart', {})
+    cart = {}
+    for i in cartData:
+        if cart.__contains__(i):
+            cart[i] += cartData[i]
+        else:
+            cart[i] = cartData[i]
+    cart[product_name] += value;
+    if cart[product_name] <= 0:
+        cart.pop(product_name)
+    request.session['cart'] = cart
+    return HttpResponseRedirect(reverse('products:cart'))

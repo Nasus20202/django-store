@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <title>{% if value != 'Undefined' %}
-    Szukaj {{ value }}
-  {% else %}
-    Szukaj
-  {% endif %}</title>
+  <title>Koszyk</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <style>
+    <style>
         .row {
    display: flex;
    flex-wrap: wrap;
-   }
+}
 
 .row > div[class*='col-'] {
   display: flex;
 }
 
-  </style>
+    @media only screen and (max-width: 750px) {
+        .table-img {
+            width: 67%;
+    }}
+    @media only screen and (min-width: 751px) {
+        .table-img {
+            width: 33%;
+        }
+    }
+
+    </style>
     <script type="text/javascript">
       function s(){
           search = document.getElementById("searchText").value;
@@ -64,49 +70,46 @@
 </nav>
 
 <div class="jumbotron text-center">
-  {% if value != 'Undefined' %}
-    <h1>Szukaj {{ value }}</h1>
-  {% else %}
-    <h1>Szukaj</h1>
-  {% endif %}
-<br>
-<div class="row form-group">
-            <div class="col-md-11">
+  <h1>Koszyk</h1><br>
+    <div class="row form-group">
+            <div class="col-md-12">
                 <input type="text" class="form-control" id="searchText" size="128" placeholder="Wyszukaj w sklepie...">
+                <a onclick="s()" href="#" style="margin-left: 10px" class="btn btn-primary">Szukaj</a>
             </div>
 
-                <div class="col-md-1">
-                <a onclick="s()" href="#" style="margin-left: 10px" class="btn btn-primary">Szukaj</a>
-                </div>
-            </div><br>
+  </div>
 </div>
 
 <div class="container">
-            {% if found.count > 0 %}
-                <div class="row">
-                {% for prod in found %}
-                    <div class="col-md-4">
-                    <div class="card">
-                    <a href="{% url 'products:product' prod.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ prod.photo }}" alt="{{ prod.shortName }}"></a>
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="{% url 'products:product' prod.shortName %}"><span class="text-muted">{{ prod.brand }}</span> {{ prod.name }}</a></h5>
-                        <p class="card-text">{{ prod.shortAbout|slice:"100" }}...</p>
-                        <p style="float: right">{{ prod.Price_divided }} zł</p>
-                        {% if prod.stock > 0 %}
-                            <a href="{% url 'products:add_to_cart' prod.shortName %}" class="btn btn-primary" id="{{ prod.shortName }}-add-to-cart">Dodaj do koszyka</a>
-                        {%  else %}
-                            <a href="#" class="btn text-white bg-danger disabled">Niedostępny</a>
-                        {% endif %}
-                    </div>
-                </div>
-                </div>
-                {%  cycle '' '' '</div><div class="row">' %}
-                {% endfor %}
-            {% else %}
-                Nie znaleziono produktów
-            {% endif %}
-    </div>
+    {% if cart %}
+    <table class="table table-image">
+    <thead><tr>
+            <th scope="col"></th>
+        <th scope="col">Producent</th>
+          <th scope="col">Produkt</th>
+          <th scope="col">Ilość</th>
+          <th scope="col">Usuń</th>
+      </tr></thead><tbody>
+        {% for shortName in cart %}
+            {% load products_extras %}
+            {% product_by_shortName shortName as prod %}
+            <tr scope="row">
+                <td style="width: 20%"><a href="{% url 'products:product' prod.shortName %}"><img class="img-fluid table-img" src="{% static "/products/img/" %}{{ prod.photo }}"></a></td>
+                <td style="text-align: left"><a style="color: black" href="{% url 'products:product' prod.shortName %}">{{ prod.brand }}</a></td>
+                <td style="text-align: left"><a style="color: black" href="{% url 'products:product' prod.shortName %}">{{ prod.name }}</a></td>
+                <td>
+                    <a href="{% url 'products:change_cart' prod.shortName '-1' %}">&#10134;</a>
+                    <b>{{ cart|item:shortName }}</b>
+                    <a href="{% url 'products:change_cart' prod.shortName '1' %}">&#10133;</a>
+                </td>
+                <td><a href="{% url 'products:remove_from_cart' prod.shortName %}">&#128465;</a></td>
+            </tr>
+        {% endfor %}
+    </tbody></table>
+    {% else %}
+        Koszyk jest pusty
+    {% endif %}
+    <br><br><a class="btn btn-primary" style="float: right" href="{% url 'products:clear_cart' %}">Wyczyść koszyk</a>
 </div>
-
 </body>
 </html>

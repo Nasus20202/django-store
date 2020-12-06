@@ -90,7 +90,11 @@
                         <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}"><span class="text-muted">{{ product.brand }}</span> {{ product.name }}</a></h5>
                         <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
                         <p style="float: right">{{ product.Price_divided }} zł</p>
-                        <a href="#" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
+                        {% if product.stock > 0 %}
+                            <a href="{% url 'products:add_to_cart' product.shortName %}" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
+                        {%  else %}
+                            <a href="#" class="btn text-white bg-danger  disabled">Niedostępny</a>
+                        {% endif %}
                     </div>
                 </div>
                 </div>
@@ -99,6 +103,9 @@
         {% else %}
             Brak produktów
         {% endif %}
+        <ul class="nav navbar-nav ml-auto">
+            <a class="nav-link" style="float: right; font-weight: bold" href="{% url 'products:cart' %}">Koszyk</a>
+          </ul>
     </div>
   </div>
 </div>
