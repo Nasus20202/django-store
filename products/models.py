@@ -100,6 +100,8 @@ class Order(models.Model):
     date = models.DateTimeField(default=timezone.now())
     cost = models.IntegerField(default=0)
     products = models.TextField(default='')
+    payment = models.IntegerField(default=0)
+    delivery = models.IntegerField(default=0)
 
 
 

@@ -25,6 +25,18 @@
         <input class="form-control" type="email" id="email" name="email" placeholder="Podaj email..." required><br>
         <label for="adres">Adres:</label><br>
         <input class="form-control" type="text" id="adres" name="adres" placeholder="Podaj adres..." required><br>
+        <label for="exampleFormControlSelect1">Metoda płatności</label>
+            <select class="form-control" id="payment">
+              <option>Karta płatnicza</option>
+              <option>Przelew</option>
+              <option>Płatność przy odbiorze</option>
+            </select>
+        <label for="exampleFormControlSelect1">Dostawa</label>
+            <select class="form-control" id="delivery">
+              <option>Kurier</option>
+              <option>Odbiór osobisty</option>
+              <option>Paczkomat</option>
+            </select>
       </div>
       <h4>Produkty:</h4>
       {% for shortName in cart %}
