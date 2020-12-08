@@ -27,16 +27,16 @@
         <input class="form-control" type="text" id="adres" name="adres" placeholder="Podaj adres..." required><br>
         <label for="exampleFormControlSelect1">Metoda płatności</label>
             <select class="form-control" id="payment">
-              <option>Karta płatnicza</option>
-              <option>Przelew</option>
-              <option>Płatność przy odbiorze</option>
-            </select>
+              <option value="0">Karta płatnicza</option>
+              <option value="1">Przelew</option>
+              <option value="2">Płatność przy odbiorze</option>
+            </select><br>
         <label for="exampleFormControlSelect1">Dostawa</label>
             <select class="form-control" id="delivery">
-              <option>Kurier</option>
-              <option>Odbiór osobisty</option>
-              <option>Paczkomat</option>
-            </select>
+              <option value="1">Kurier</option>
+              <option value="2">Odbiór osobisty</option>
+              <option value="3">Paczkomat</option>
+            </select><br>
       </div>
       <h4>Produkty:</h4>
       {% for shortName in cart %}
