@@ -93,6 +93,7 @@
                         <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}"><span class="text-muted">{{ product.brand }}</span> {{ product.name }}</a></h5>
                         <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
                         <p style="float: right">{{ product.Price_divided }} zł</p>
+                        <p>{{ product.Rating }} &#9733;</p>
                         {% if product.stock > 0 %}
                             <a href="{% url 'products:add_to_cart' product.shortName %}" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
                         {%  else %}

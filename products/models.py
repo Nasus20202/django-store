@@ -1,5 +1,5 @@
 from django.db import models
-import operator
+from django.utils import timezone
 
 
 def category_list_fun(order="name"):
@@ -82,7 +82,24 @@ class Product(models.Model):
         return self.price/100
 
     def Rating(self):
-        return self.rating/self.votes
+        if self.votes>0:
+            return format(self.rating/self.votes, '.2f')
+        else:
+            return 'Brak'
+
+
+class Order(models.Model):
+    def __str__(self):
+        return self.orderId
+
+    orderId = models.IntegerField(default=0)
+    name = models.CharField(max_length=64, default='')
+    surname = models.CharField(max_length=64, default='')
+    email = models.CharField(max_length=128, default='')
+    address = models.CharField(max_length=64, default='')
+    date = models.DateTimeField(default=timezone.now())
+    cost = models.IntegerField(default=0)
+    products = models.TextField(default='')
 
 
 

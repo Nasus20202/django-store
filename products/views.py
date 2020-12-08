@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.template import RequestContext
 from .models import *
@@ -108,8 +108,22 @@ def change(request, product_name, value):
             cart[i] += cartData[i]
         else:
             cart[i] = cartData[i]
-    cart[product_name] += value;
+    cart[product_name] += value
     if cart[product_name] <= 0:
         cart.pop(product_name)
     request.session['cart'] = cart
     return HttpResponseRedirect(reverse('products:cart'))
+
+
+def order(request):
+    cart = request.session.get('cart', {})
+    context = {'cart': cart}
+    return render(request, 'products/order.html', context)
+
+
+def rate(request, product_name, rate):
+    product = get_object_or_404(Product, shortName__iexact=product_name)
+    product.rating += rate
+    product.votes += 1
+    product.save()
+    return HttpResponseRedirect(reverse('products:product', args=[product_name]))

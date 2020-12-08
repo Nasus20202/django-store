@@ -23,3 +23,4 @@ class SubcategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Subcategory, SubcategoryAdmin)
 admin.site.register(Product)
+admin.site.register(Order)
