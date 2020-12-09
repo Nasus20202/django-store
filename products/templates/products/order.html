@@ -8,31 +8,46 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        (function()
+{
+  if( window.localStorage )
+  {
+    if( !localStorage.getItem('firstLoad') )
+    {
+      localStorage['firstLoad'] = true;
+      window.location.reload();
+    }
+    else
+      localStorage.removeItem('firstLoad');
+  }
+})();
+    </script>
 </head>
 <body>
-
+{% load products_extras %}
 <div style="margin-top: 50px" class="container">
     {% if cart %}
     <h3>Zamawianie</h3><br>
-    <form action="#" method="post">
+    <form action="{% url 'products:finalize' %}" method="post">
     {% csrf_token %}
       <div class="form-group">
         <label for="name">Imię:</label><br>
-        <input class="form-control" type="text" id="name" placeholder="Podaj swoje imię..." required><br>
+        <input class="form-control" type="text" id="name" name="name" placeholder="Podaj swoje imię..." required><br>
         <label for="surname">Nazwisko:</label><br>
         <input class="form-control" type="text" id="surname" name="surname" placeholder="Podaj nazwisko..." required><br>
         <label for="email">Edres mailowy:</label><br>
         <input class="form-control" type="email" id="email" name="email" placeholder="Podaj email..." required><br>
-        <label for="adres">Adres:</label><br>
-        <input class="form-control" type="text" id="adres" name="adres" placeholder="Podaj adres..." required><br>
+        <label for="address">Adres:</label><br>
+        <input class="form-control" type="text" id="address" name="address" placeholder="Podaj adres..." required><br>
         <label for="payment">Metoda płatności</label>
-            <select class="form-control" id="payment">
+            <select class="form-control" id="payment" name="payment">
               <option value="0">Karta płatnicza</option>
               <option value="1">Przelew</option>
               <option value="2">Płatność przy odbiorze</option>
             </select><br>
         <label for="delivery">Dostawa</label>
-            <select class="form-control" id="delivery">
+            <select class="form-control" id="delivery" name="delivery">
               <option value="1">Kurier</option>
               <option value="2">Odbiór osobisty</option>
               <option value="3">Paczkomat</option>
@@ -42,7 +57,6 @@
       {% for shortName in cart %}
             <div class="row">
             <div class="col-sm-11">
-            {% load products_extras %}
             {% product_by_shortName shortName as prod %}
             {% with cart|item:shortName as count %}
             {{ count }} x {{ prod.brand }} {{ prod.name }}
@@ -54,7 +68,7 @@
       <br>
       <h4>Suma: {% price_sum cart %} zł</h4>
       <br>
-      <button type="submit" class="btn btn-success">Zamów</button>
+      <input type="submit" class="btn btn-success" value="Zamów">
     </form>
     {% else %}
         <h3>Koszyk jest pusty</h3>

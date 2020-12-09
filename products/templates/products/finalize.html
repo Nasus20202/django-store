@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <title>Zamawianie</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+{% load products_extras %}
+<div style="margin-top: 50px" class="container">
+    {% if unavailable %}
+        <h5>Poniższe produkty są niedostępne w wybranej ilości:</h5>
+        <ul>
+        {% for name in unavailable %}
+            {% product_by_shortName name as prod %}
+            <li>
+                {{ prod.brand }} {{ prod.name }}  -  dostępne <b>{{ prod.stock }}</b> szt. <span style="margin-left:50px">(w koszyku {{ cart|item:prod.shortName }})</span></li>
+        {% endfor %}
+        </ul>
+        <h5>Przepraszamy!</h5><br>
+        <a class="btn btn-primary" href="{% url 'products:cart' %}">Koszyk</a>
+    {% else %}
+        <h1 class="text-success" style="margin-top: 40%; text-align: center">Dziękujemy za złożone zamówienie</h1>
+        <h5 style="text-align: center">Numer zamówienia: {{ order.orderId }}</h5>
+        <br><p style="text-align: center">Status zamówienia:
+        {% if order.status == 0 %}
+            Przyjęte
+        {% elif order == 1 %}
+            W realizacji
+        {% elif order == 2 %}
+            W trakcie dostawy
+        {% else %}
+            Gotowe do odbioru
+        {% endif %}</p>
+        <p style="margin-left: 40%; width: 20%"><a style="margin-top: 50px" href="{% url 'products:index' %}" class="btn btn-block btn-success">Powrót do sklepu</a></p>
+    {% endif %}
+</div>
+
+</body>
+</html>

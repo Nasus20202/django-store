@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+from django.utils.timezone import now
 
 
 def category_list_fun(order="name"):
@@ -90,18 +90,19 @@ class Product(models.Model):
 
 class Order(models.Model):
     def __str__(self):
-        return self.orderId
+        return str(self.orderId)
 
     orderId = models.IntegerField(default=0)
     name = models.CharField(max_length=64, default='')
     surname = models.CharField(max_length=64, default='')
     email = models.CharField(max_length=128, default='')
     address = models.CharField(max_length=64, default='')
-    date = models.DateTimeField(default=timezone.now())
+    date = models.DateTimeField(default=now())
     cost = models.IntegerField(default=0)
     products = models.TextField(default='')
     payment = models.IntegerField(default=0)
     delivery = models.IntegerField(default=0)
+    status = models.IntegerField(default=0)
 
 
 
