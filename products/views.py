@@ -122,6 +122,10 @@ def order(request):
 
 
 def rate(request, product_name, rate):
+    if rate > 5:
+        rate = 5
+    elif rate < 1:
+        rate = 1
     product = get_object_or_404(Product, shortName__iexact=product_name)
     product.rating += rate
     product.votes += 1
