@@ -51,3 +51,14 @@ def price_sum(cart):
         else:
             result += i
     return result
+
+
+@register.simple_tag
+def isRated(request, product_name):
+    try:
+        if request.session['rated:'+product_name]:
+            return True
+        else:
+            return False
+    except:
+        return False

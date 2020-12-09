@@ -72,6 +72,7 @@
     </form>
     {% else %}
         <h3>Koszyk jest pusty</h3>
+        <a style="margin-top: 50px" href="{% url 'products:index' %}" class="btn btn-primary">Powrót do sklepu</a>
     {% endif %}
 </div>
 

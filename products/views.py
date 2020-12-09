@@ -126,7 +126,8 @@ def rate(request, product_name, rate):
     product.rating += rate
     product.votes += 1
     product.save()
-    return HttpResponseRedirect(reverse('products:product', args=[product_name]))
+    request.session['rated:'+product_name] = True
+    return HttpResponseRedirect(reverse('products:product', args=[product_name])+'#rating')
 
 
 def finalize(request):
@@ -156,6 +157,10 @@ def finalize(request):
         except:
             return HttpResponse("Data POST error")
         order.products = cart
+        for i in cart:
+            prod = get_object_or_404(Product, shortName__iexact=i)
+            prod.stock -= cart[i]
+            prod.save()
         order.cost = price
         order.save()
         request.POST = []
