@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   {% load static %}
   <link rel="shortcut icon" type="image/png" href="{% static 'products/favicon.ico' %}"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -97,13 +96,13 @@
               <th>Kategorie</th>
               <td>{% count 'Category' %}</td>
           </tr>
+          <tr>
+              <th>Zamówienia</th>
+              <td>{% count 'Order' %}</td>
+          </tr>
           </tbody>
        </table>
       <br>
-      <div>
-          <a style="float: right" class="btn btn-info" href="https://github.com/Nasus20202/django-store">Kod zródłowy <p class="fa">&#xf09b;</p></a><br>Autor: Krzysztof Nasuta &copy 2020<br>
-          Zdjęcia i opisy pochodzą ze strony x-kom.pl, strona nie ma celu zarobkowego.
-      </div>
   </div>
     <div class="col-sm-2">
         <h4 style="text-align: center">Polecamy</h4>
@@ -125,6 +124,11 @@
     </div>
   </div>
 </div>
+<footer class="footer">
+      <div class="container-fluid">
+        <span class="text-muted">Autor: Krzysztof Nasuta &copy 2020</span>
+      </div>
+    </footer>
 
 </body>
 </html>
