@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  {% load static %}
+  <link rel="shortcut icon" type="image/png" href="{% static 'products/favicon.ico' %}"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -16,7 +18,7 @@
     </script>
 </head>
 <body>
-
+{% load products_extras %}
  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <a class="navbar-brand" href="{% url 'products:index' %}">Sklep</a>
   {% if category_list %}
@@ -61,20 +63,72 @@
             </div>
 </div>
 
-<div class="container">
+
+<div class="container-fluid">
   <div class="row">
-    <div class="col-sm-12">
-        Kategorie produktów w sklepie:<br>
+    <div class="col-sm-2">
+        <h3>Kategorie:</h3><br>
         {% if category_list %}
+            <ul style="list-style-type: circle;">
             {% for cat in category_list %}
-                <a href="{% url 'products:category' cat.shortName %}">{{ cat.name }}</a><br>
+                <li><a class="text-info" href="{% url 'products:category' cat.shortName %}">{{ cat.name }}</a></li>
             {% endfor %}
+            </ul>
         {% else %}
             Brak kategorii
         {% endif %}
     </div>
+  <div class="col-sm-8">
+      <h3 style="text-align: center">Witaj w sklepie!</h3>
+      Django to darmowy i open-source'owy framework do tworzenia aplikacji webowych, napisany w Pythonie. To taki zbiór narzędzi, dzięki którym tworzenie stron internetowych jest szybsze i łatwiejsze.
+      <br>Sklep został napisany z użyciem tego narzędzia. Jest to projekt edukacyjny<br><br>
+      <table class="table">
+          <tbody>
+          <tr>
+              <th>Produkty</th>
+              <td>{% count 'Product' %}</td>
+          </tr>
+          <tr>
+              <th>Podkategorie</th>
+              <td>{% count 'Subcategory' %}</td>
+          </tr>
+          <tr>
+              <th>Kategorie</th>
+              <td>{% count 'Category' %}</td>
+          </tr>
+          <tr>
+              <th>Zamówienia</th>
+              <td>{% count 'Order' %}</td>
+          </tr>
+          </tbody>
+       </table>
+      <br>
+  </div>
+    <div class="col-sm-2">
+        <h4 style="text-align: center">Polecamy</h4>
+        {% randomProduct as product %}
+        <div class="card" style="float: right">
+                    <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'products:product' product.shortName %}"><span class="text-muted">{{ product.brand }}</span> {{ product.name }}</a></h5>
+                        <p class="card-text">{{ product.shortAbout|slice:"100" }}...</p>
+                        <p style="float: right">{{ product.Price_divided }} zł</p>
+                        <p>{{ product.Rating }} &#9733;</p>
+                        {% if product.stock > 0 %}
+                            <a href="{% url 'products:add_to_cart' product.shortName %}" class="btn btn-primary" id="{{ product.shortName }}-add-to-cart">Dodaj do koszyka</a>
+                        {%  else %}
+                            <a href="#" class="btn text-white bg-danger  disabled">Niedostępny</a>
+                        {% endif %}
+                    </div>
+                </div>
+    </div>
   </div>
 </div>
+<footer class="footer">
+      <div class="container-fluid">
+        <span class="text-muted">Autor: Krzysztof Nasuta &copy 2020</span>
+      </div>
+    </footer>
 
 </body>
 </html>

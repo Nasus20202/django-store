@@ -1,5 +1,7 @@
 from django import template
 from ..models import *
+import random
+from django.apps import apps
 
 register = template.Library()
 
@@ -73,3 +75,15 @@ def isRated(request, product_name):
             return False
     except:
         return False
+
+
+@register.simple_tag
+def randomProduct():
+    products = Product.objects.all()
+    return random.choice(products)
+
+
+@register.simple_tag
+def count(modelName):
+    model = apps.get_model('products', modelName)
+    return model.objects.count()
