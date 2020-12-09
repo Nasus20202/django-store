@@ -160,6 +160,7 @@ def finalize(request):
         for i in cart:
             prod = get_object_or_404(Product, shortName__iexact=i)
             prod.stock -= cart[i]
+            prod.times_bought += cart[i]
             prod.save()
         order.cost = price
         order.save()
