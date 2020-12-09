@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from django.template import RequestContext
+import random
 from .models import *
 
 
@@ -108,8 +108,73 @@ def change(request, product_name, value):
             cart[i] += cartData[i]
         else:
             cart[i] = cartData[i]
-    cart[product_name] += value;
+    cart[product_name] += value
     if cart[product_name] <= 0:
         cart.pop(product_name)
     request.session['cart'] = cart
     return HttpResponseRedirect(reverse('products:cart'))
+
+
+def order(request):
+    cart = request.session.get('cart', {})
+    context = {'cart': cart}
+    return render(request, 'products/order.html', context)
+
+
+def rate(request, product_name, rate):
+    product = get_object_or_404(Product, shortName__iexact=product_name)
+    product.rating += rate
+    product.votes += 1
+    product.save()
+    request.session['rated:'+product_name] = True
+    return HttpResponseRedirect(reverse('products:product', args=[product_name])+'#rating')
+
+
+def finalize(request):
+    cart = request.session.get('cart', {})
+    if not cart:
+        return HttpResponseRedirect(reverse('products:index'))
+    unavailable = []
+    order = Order()
+    price = 0
+    for i in cart:
+        prod = get_object_or_404(Product, shortName__iexact=i)
+        if prod.stock < cart[i]:
+            unavailable.append(i)
+        price += (cart[i] * prod.price)
+    if not unavailable:
+        id = random.randint(10000000, 99999999)
+        while Order.objects.filter(orderId__iexact=id).exists():
+            id = random.randint(10000000, 99999999)
+        order.orderId = id
+        try:
+            order.name = request.POST['name']
+            order.surname = request.POST['surname']
+            order.email = request.POST['email']
+            order.address = request.POST['address']
+            order.payment = request.POST['payment']
+            order.delivery = request.POST['delivery']
+        except:
+            return HttpResponse("Data POST error")
+        order.products = cart
+        for i in cart:
+            prod = get_object_or_404(Product, shortName__iexact=i)
+            prod.stock -= cart[i]
+            prod.save()
+        order.cost = price
+        order.save()
+        request.POST = []
+        request.session['cart'] = {}
+    context = {'cart': cart, 'unavailable': unavailable, 'order': order}
+    if unavailable:
+        return render(request, 'products/finalize.html', context)
+    else:
+        return HttpResponseRedirect(reverse('products:status', args=[order.orderId]))
+
+
+def status(request, id):
+    order = get_object_or_404(Order, orderId__iexact=id)
+    cart = order.products
+    unavailable = []
+    context = {'cart': cart, 'unavailable': unavailable, 'order': order}
+    return render(request, 'products/finalize.html', context)

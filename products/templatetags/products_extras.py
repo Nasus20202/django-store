@@ -33,7 +33,18 @@ def multiply(a, b):
             result2 += ','
         else:
             result2 += i
-    return result2
+    result = ''
+    c = 0
+    afterDot = False
+    for i in result2:
+        if afterDot:
+            c+=1
+        if i ==',':
+            afterDot = True
+        result+=i
+        if c == 2:
+            break
+    return result
 
 
 @register.simple_tag
@@ -51,3 +62,14 @@ def price_sum(cart):
         else:
             result += i
     return result
+
+
+@register.simple_tag
+def isRated(request, product_name):
+    try:
+        if request.session['rated:'+product_name]:
+            return True
+        else:
+            return False
+    except:
+        return False

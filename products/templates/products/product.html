@@ -17,6 +17,7 @@
   {% load static %}
 </head>
 <body>
+{% load products_extras %}
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
   <a class="navbar-brand" href="{% url 'products:index' %}">Sklep</a>
   {% if product.Category.category_list %}
@@ -67,7 +68,7 @@
     <a class="nav-link" href="#specs">Specyfikacja</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#">Opinie</a>
+    <a class="nav-link" href="#rating">Opinie</a>
   </li>
 </ul>
 
@@ -97,6 +98,10 @@
                     <th scope="col"  style="font-weight: normal">Producent:</th>
                     <th scope="col">{{ product.brand }}</th>
                 </tr>
+                <tr>
+                    <th scope="col"  style="font-weight: normal">Ocena:</th>
+                    <th scope="col">{{ product.Rating }} &#9733;</th>
+                </tr>
             </tbody>
         </table>
         {% if product.stock > 0 %}
@@ -115,7 +120,32 @@
     <table class="table" id="specs">
 
     </table>
-  </div>
+    <h3 style="font-weight: bold; margin-top: 30px">Oceń produkt {{ product.name }}</h3>
+    {% isRated request product.shortName as isr %}
+    {% if isr %}
+        <table class="table" id="rating">
+        <tr>
+            <th style="width: 20%"><a class="btn btn-block btn-danger disabled" href="{% url 'products:rate' product.shortName 1 %}">&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-warning disabled" href="{% url 'products:rate' product.shortName 2 %}">&#9733;&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-info disabled" href="{% url 'products:rate' product.shortName 3 %}">&#9733;&#9733;&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-primary disabled" href="{% url 'products:rate' product.shortName 4 %}">&#9733;&#9733;&#9733;&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-success disabled" href="{% url 'products:rate' product.shortName 5 %}">&#9733;&#9733;&#9733;&#9733;&#9733;</a></th>
+        </tr>
+        <tr>
+            <th colspan="5"><h5 style="text-align: center;">Dziękujemy za oddanie głosu!</h5></th>
+        </tr>
+  </table>
+    {% else %}
+    <table class="table" id="rating">
+        <tr>
+            <th style="width: 20%"><a class="btn btn-block btn-danger" href="{% url 'products:rate' product.shortName 1 %}">&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-warning" href="{% url 'products:rate' product.shortName 2 %}">&#9733;&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-info" href="{% url 'products:rate' product.shortName 3 %}">&#9733;&#9733;&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-primary" href="{% url 'products:rate' product.shortName 4 %}">&#9733;&#9733;&#9733;&#9733;</a></th>
+            <th style="width: 20%"><a class="btn btn-block btn-success" href="{% url 'products:rate' product.shortName 5 %}">&#9733;&#9733;&#9733;&#9733;&#9733;</a></th>
+        </tr>
+  </table>
+  {% endif %}
 </div>
 
 </body>
