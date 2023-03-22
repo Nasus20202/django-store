@@ -106,6 +106,8 @@
   </div>
     <div class="col-sm-2">
         <h4 style="text-align: center">Polecamy</h4>
+        {% anyProductsAvailable as productAvaiable %}
+        {% if productAvaiable %}
         {% randomProduct as product %}
         <div class="card" style="float: right">
                     <a href="{% url 'products:product' product.shortName %}"><img class="img-fluid card-img-top" src="{% static "/products/img/" %}{{ product.photo }}" alt="{{ product.shortName }}"></a>
@@ -121,6 +123,7 @@
                         {% endif %}
                     </div>
                 </div>
+        {% endif %}
     </div>
   </div>
 </div>

@@ -82,6 +82,11 @@ def randomProduct():
     products = Product.objects.all()
     return random.choice(products)
 
+@register.simple_tag
+def anyProductsAvailable():
+    products = Product.objects.all()
+    return len(products) > 0
+
 
 @register.simple_tag
 def count(modelName):
